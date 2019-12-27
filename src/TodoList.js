@@ -14,6 +14,7 @@ class TodoList extends Component {
 			]
 		};
 		this.addTodo = this.addTodo.bind(this);
+		this.deleteTodo = this.deleteTodo.bind(this);
 	}
 
 	addTodo(todo) {
@@ -23,11 +24,19 @@ class TodoList extends Component {
 		}));
 	}
 
+	deleteTodo(evt) {
+		const id = evt.target.parentElement.id;
+		let filteredTodos = this.state.todos.filter((todo) => todo.id !== id);
+		this.setState({ todos: filteredTodos });
+	}
+
 	render() {
 		return (
 			<div>
 				<NewTodoForm addTodo={this.addTodo} />
-				{this.state.todos.map((todo) => <Todo key={todo.id} id={todo.id} todo={todo.todo} />)}
+				{this.state.todos.map((todo) => (
+					<Todo key={todo.id} id={todo.id} todo={todo.todo} deleteTodo={this.deleteTodo} />
+				))}
 			</div>
 		);
 	}
