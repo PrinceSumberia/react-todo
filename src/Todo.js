@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import './Todo.css';
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
+
 class Todo extends Component {
 	constructor(props) {
 		super(props);
@@ -36,25 +38,35 @@ class Todo extends Component {
 		let result;
 		if (this.state.isEditing) {
 			result = (
-				<div>
-					<form onSubmit={this.handleUpdate}>
+				<CSSTransition key="editing" timeout={500} classNames="form">
+					<form className="Todo-edit-form" onSubmit={this.handleUpdate}>
 						<input type="text" value={this.state.todo} name="todo" onChange={this.handleChange} />
 						<button onClick={this.toggleFrom}>Save</button>
 					</form>
-				</div>
+				</CSSTransition>
 			);
 		} else {
 			result = (
-				<div id={this.state.id}>
+				<CSSTransition key="normal" timeout={500} classNames="task-text">
 					<li className={this.props.completed ? 'completed' : ''} onClick={this.handleToggle}>
 						{this.state.todo}
 					</li>
-					<button onClick={this.handleDelete}>X</button>
-					<button onClick={this.toggleFrom}>Edit</button>
-				</div>
+				</CSSTransition>
 			);
 		}
-		return result;
+		return (
+			<TransitionGroup className={this.props.completed ? 'Todo completed' : 'Todo'}>
+				{result}
+				<div className="Todo-buttons">
+					<button onClick={this.toggleFrom}>
+						<i class="fas fa-pen" />
+					</button>
+					<button onClick={this.handleDelete}>
+						<i class="fas fa-trash" />
+					</button>
+				</div>
+			</TransitionGroup>
+		);
 	}
 }
 

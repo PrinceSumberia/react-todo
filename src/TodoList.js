@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import Todo from './Todo';
 import NewTodoForm from './NewTodoForm';
+import './TodoList.css';
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
 
 class TodoList extends Component {
 	constructor(props) {
@@ -47,21 +49,25 @@ class TodoList extends Component {
 
 	render() {
 		const todos = this.state.todos.map((todo) => (
-			<Todo
-				key={todo.id}
-				id={todo.id}
-				todo={todo.todo}
-				completed={todo.completed}
-				deleteTodo={this.deleteTodo}
-				updateTodo={this.updateTodo}
-				toggleTodo={this.toggleCompletion}
-			/>
+			<CSSTransition key={todo.id} timeout={500} classNames="todo">
+				<Todo
+					key={todo.id}
+					id={todo.id}
+					todo={todo.todo}
+					completed={todo.completed}
+					deleteTodo={this.deleteTodo}
+					updateTodo={this.updateTodo}
+					toggleTodo={this.toggleCompletion}
+				/>
+			</CSSTransition>
 		));
 		return (
-			<div>
+			<div className="TodoList">
 				<h1>Todo List!</h1>
 				<NewTodoForm addTodo={this.addTodo} />
-				<ul>{todos}</ul>
+				<ul>
+					<TransitionGroup className="todo-list">{todos}</TransitionGroup>
+				</ul>
 			</div>
 		);
 	}
