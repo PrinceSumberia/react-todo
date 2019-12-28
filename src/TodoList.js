@@ -15,14 +15,12 @@ class TodoList extends Component {
 		};
 		this.addTodo = this.addTodo.bind(this);
 		this.deleteTodo = this.deleteTodo.bind(this);
-		this.editTodo = this.editTodo.bind(this);
+		this.updateTodo = this.updateTodo.bind(this);
 	}
 
 	addTodo(todo) {
-		let newTodo = { id: uuid(), todo };
 		this.setState((state) => ({
-			todos: [ ...state.todos, newTodo ],
-			isEditing: false
+			todos: [ ...state.todos, todo ]
 		}));
 	}
 
@@ -31,23 +29,31 @@ class TodoList extends Component {
 		this.setState({ todos: filteredTodos });
 	}
 
-	updateTodo(id) {
-		this.setState({ isEditing: true });
+	updateTodo(id, updateTodo) {
+		const updatedTodo = this.state.todos.map((todo) => {
+			if (todo.id === id) {
+				return { ...todo, todo: updateTodo };
+			}
+			return todo;
+		});
+		this.setState({ todos: updatedTodo });
 	}
 
 	render() {
+		const todos = this.state.todos.map((todo) => (
+			<Todo
+				key={todo.id}
+				id={todo.id}
+				todo={todo.todo}
+				deleteTodo={this.deleteTodo}
+				updateTodo={this.updateTodo}
+			/>
+		));
 		return (
 			<div>
+				<h1>Todo List!</h1>
 				<NewTodoForm addTodo={this.addTodo} />
-				{this.state.todos.map((todo) => (
-					<Todo
-						key={todo.id}
-						id={todo.id}
-						todo={todo.todo}
-						deleteTodo={this.deleteTodo}
-						updateTodo={this.updateTodo}
-					/>
-				))}
+				<ul>{todos}</ul>
 			</div>
 		);
 	}
